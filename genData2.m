@@ -19,9 +19,9 @@ x3 = [0 0 0 0 0 0 0 0 0 0 0;
       0 1 1 1 1 1 1 1 0 1 0;
       0 0 0 0 0 0 0 0 0 0 0];
 
-subplot(1, 3, 1); imshow(x1, 'InitialMagnification', 10000); hold on;
-subplot(1, 3, 2); imshow(x2, 'InitialMagnification', 10000); hold on;
-subplot(1, 3, 3); imshow(x3, 'InitialMagnification', 10000); hold on;
+subplot(1, 3, 1); imshow(x1, 'InitialMagnification', 10000); hold on; title("x1", 'FontSize', 25)
+subplot(1, 3, 2); imshow(x2, 'InitialMagnification', 10000); hold on; title("x2", 'FontSize', 25)
+subplot(1, 3, 3); imshow(x3, 'InitialMagnification', 10000); hold on; title("x3", 'FontSize', 25)
 
 X = [x1; x2; x3];
 moments = [];
@@ -76,7 +76,8 @@ end
 figure;
 for m_i = 1 : 8
     subplot(4, 2,m_i)
-    plot(moments(:,m_i)); hold on;
+    plot(moments(:,m_i), 'x-'); hold on;
+    title(['I', num2str(m_i)], 'FontSize', 20);
 end
 % legend(["I1", "I2", "I3", "I4", "I5", "I6", "I7", "I8"]);
 % legend(["I3", "I4", "I5", "I6", "I7", "I8"]);
