@@ -1,36 +1,71 @@
 %% generate pattern
 close all; clear; clc;
 
-x1 = [0 0 0 0 0 0 0 0 0 0 0;
-      0 1 1 1 0 0 0 0 0 0 0;
-      0 1 0 1 0 0 0 0 0 0 0;
-      0 1 0 1 1 1 1 1 1 1 0;
-      0 0 0 0 0 0 0 0 0 0 0];
+% x1 = [0 0 0 0 0 0 0 0 0 0 0;
+%       0 1 1 1 0 0 0 0 0 0 0;
+%       0 1 0 1 0 0 0 0 0 0 0;
+%       0 1 0 1 1 1 1 1 1 1 0;
+%       0 0 0 0 0 0 0 0 0 0 0];
+% 
+% x2 = [0 0 0 0 0 0 0 0 0 0 0;
+%       0 0 0 0 1 1 1 0 0 0 0 ;
+%       0 0 0 0 1 0 1 0 0 0 0;
+%       0 1 1 1 1 0 1 1 1 1 0;
+%       0 0 0 0 0 0 0 0 0 0 0];
+% 
+% x3 = [0 0 0 0 0 0 0 0 0 0 0;
+%       0 0 0 0 0 0 0 1 1 1 0;
+%       0 0 0 0 0 0 0 1 0 1 0;
+%       0 1 1 1 1 1 1 1 0 1 0;
+%       0 0 0 0 0 0 0 0 0 0 0];
+% 
+% subplot(1, 3, 1); imshow(x1, 'InitialMagnification', 10000); hold on; title("x1", 'FontSize', 25)
+% subplot(1, 3, 2); imshow(x2, 'InitialMagnification', 10000); hold on; title("x2", 'FontSize', 25)
+% subplot(1, 3, 3); imshow(x3, 'InitialMagnification', 10000); hold on; title("x3", 'FontSize', 25)
+% 
+% X = [x1; x2; x3];
 
-x2 = [0 0 0 0 0 0 0 0 0 0 0;
-      0 0 0 0 1 1 1 0 0 0 0 ;
-      0 0 0 0 1 0 1 0 0 0 0;
-      0 1 1 1 1 0 1 1 1 1 0;
-      0 0 0 0 0 0 0 0 0 0 0];
+template = zeros(5,50);
+X = {};
+pat_len = 4; % length of pattern where the values are 1
 
-x3 = [0 0 0 0 0 0 0 0 0 0 0;
-      0 0 0 0 0 0 0 1 1 1 0;
-      0 0 0 0 0 0 0 1 0 1 0;
-      0 1 1 1 1 1 1 1 0 1 0;
-      0 0 0 0 0 0 0 0 0 0 0];
+iter = 0; % counting the iteration of while structure
+while iter*pat_len+pat_len-1 < 50
+    x = template;
+    x(2, 2+iter*pat_len:2+iter*pat_len+pat_len-1) = 1;
+    x(3, 2+iter*pat_len) = 1; x(3, 2+iter*pat_len+pat_len-1)=1;
+    x(4, 2:2+iter*pat_len) = 1; x(4, 2+iter*pat_len+pat_len-1:end-1) = 1;
+    X{iter+1} = x;
 
-subplot(1, 3, 1); imshow(x1, 'InitialMagnification', 10000); hold on; title("x1", 'FontSize', 25)
-subplot(1, 3, 2); imshow(x2, 'InitialMagnification', 10000); hold on; title("x2", 'FontSize', 25)
-subplot(1, 3, 3); imshow(x3, 'InitialMagnification', 10000); hold on; title("x3", 'FontSize', 25)
+    iter = iter + 1;
+end
 
-X = [x1; x2; x3];
+for i = 1 : iter
+    subplot(subplot(iter/2, 2, i))
+    if rem(i,2) == 1
+        temp = X{(i+1)/2};
+        imshow(temp, 'InitialMagnification', 100000); hold on; 
+        title(['X', num2str((i+1)/2)], 'FontSize',20)
+    else
+        temp = X{i/2+6};
+        imshow(temp, 'InitialMagnification', 100000); hold on; 
+        title(['X', num2str(i/2+6)], 'FontSize',20)
+    end
+end
+
+% X = template;
+% X(2, 2:2+pat_len-1) = 1;
+% X(3, 2) = 1; X(3, 2+pat_len-1) = 1;
+% X(4,2) = 1; X(4, 2+pat_len-1: end-1) = 1;
+% imshow(X, 'InitialMagnification', 10000);
+
 moments = [];
 moments_norm = [];
-
-N = 3;
+Y = {X{1}, X{6}, X{12}};
+N = iter;
 %% 
-for i = 1 : N    
-    image = X(5*i-4:5*i,:);
+for i = 1 : iter   
+    image = X{i};
     [height, width] = size(image);
     
     %% Calculate the required parameters
